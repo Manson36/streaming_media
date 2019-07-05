@@ -7,5 +7,5 @@ func sendErrorResponse(w http.ResponseWriter) {
 }
 
 func sendNormalResponse(w http.ResponseWriter) {
-	
+
 }
