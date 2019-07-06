@@ -1,6 +1,10 @@
 package dbops
 
-import "testing"
+import (
+	"strconv"
+	"testing"
+	"time"
+)
 
 var tempvid string
 
@@ -70,6 +74,7 @@ func testAddVideoInfo(t *testing.T) {
 	vi, err := AddNewVideo(1, "my-video")
 	if err != nil {
 		t.Errorf("Error of AddVideoInfo: %v", err)
+		return
 	}
 
 	tempvid = vi.Id
@@ -94,4 +99,30 @@ func testRegetVideoInfo(t *testing.T) {
 	if err != nil ||vi != nil  {
 		t.Errorf("Error of RegetVideoInfo: %v", err)
 	}
+}
+
+func TestComments(t *testing.T) {
+	clearTables()
+	t.Run("AddUser", testAddUser)
+	t.Run("AddComments", testAddComments)
+	t.Run("ListComments", testListComments)
+}
+
+func testAddComments(t *testing.T) {
+	vid := "1234"//自己创建一个
+	aid := 1 //只调用了一次AddUser，是1
+	content := "I like this video"
+
+	err := AddNewComments(vid, aid, content)
+	if err != nil {
+		t.Errorf("Error of AddComments: %v", err)
+	}
+}
+
+func testListComments(t *testing.T) {
+	vid := "12345"
+	from := 1514764800
+	to, _ := strconv.Atoi(strconv.FormatInt(time.Now().UnixNano()/1000000000, 10))
+
+	res, err :
 }

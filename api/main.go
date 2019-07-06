@@ -18,4 +18,5 @@ func RegisterHandlers() *httprouter.Router {
 func main() {
 	r := RegisterHandlers()
 	http.ListenAndServe(":8000", r)
+
 }

@@ -71,8 +71,8 @@ func AddNewVideo(aid int, name string) (*defs.VideoInfo, error) {//返回整个�
 	t := time.Now()
 	ctime := t.Format("Jan 02 2006, 15:04:05")//这里面的格式的内容是固定的
 
-	stmtIns, err := dbConn.Prepare(`insert into video_info 
-					(id, author_id, name, display_ctime) values (?, ?, ?, ?)`)
+	stmtIns, err := dbConn.Prepare(
+		"insert into video_info (id, author_id, name, display_ctime) values (?, ?, ?, ?)")
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +91,7 @@ func AddNewVideo(aid int, name string) (*defs.VideoInfo, error) {//返回整个�
 
 func GetVideoInfo(vid string) (*defs.VideoInfo, error) {
 	stmtOut, err := dbConn.Prepare(
-		"select author_id, name, display_time from video_info where vid=?")
+		"select author_id, name, display_ctime from video_info where id=?")
 	if err != nil {
 		log.Printf("GetVideoInfo err: %v", err)
 		return nil, err
@@ -132,4 +132,58 @@ func DeleteVideoInfo(vid string) error {
 	}
 
 	return nil
+}
+
+func AddNewComments(vid string, aid int, content string) error {
+	id, err := utils.NewUUID()
+	if err != nil {
+		return err
+	}
+
+	stmtIns, err := dbConn.Prepare(
+		"insert into comments (id, video_id, arthor_id, content) values (?, ?, ?, ?)")
+	if err != nil {
+		return err
+	}
+
+	defer stmtIns.Close()
+
+	_, err = stmtIns.Exec(id, vid, aid, content)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func ListComments(vid string, from, to int) ([]*defs.Content, error) {
+	//将两张表合并users join comments，输入author id, video id, 得到 带有user login_name的comments
+	//将起始时间开区间，结束时间为闭区间，防止最后一个记录获取不到
+	stmtOut, err := dbConn.Prepare(`select comments.id, users.Login_name, comments.content 
+			from comments inner join users on comments.author_id = users.id 
+			where comments.video_id = ? and comments.time > FROM_UNIXTIME(?) and comments.time <= 
+			FROM_UNIXTIME(?) order by comments.time desc `)
+
+	defer stmtOut.Close()
+
+	var res []*defs.Content
+
+	rows, err := stmtOut.Query(vid, from, to)
+	if err != nil {
+		return res, err
+	}
+
+	//使用迭代器将每一行的取值，迭代出来
+	for rows.Next() {
+		var id, name, content string
+		if err := rows.Scan(&id, &name, &content); err != nil {
+			return res, err
+		}
+
+		c := &defs.Content{Id:id, VideoId: vid, Author: name, Content:content}
+
+		res = append(res, c)
+	}
+
+	return res, nil
 }
