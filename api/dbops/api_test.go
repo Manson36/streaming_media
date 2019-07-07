@@ -1,6 +1,7 @@
 package dbops
 
 import (
+	"fmt"
 	"strconv"
 	"testing"
 	"time"
@@ -124,5 +125,12 @@ func testListComments(t *testing.T) {
 	from := 1514764800
 	to, _ := strconv.Atoi(strconv.FormatInt(time.Now().UnixNano()/1000000000, 10))
 
-	res, err :
+	res, err := ListComments(vid, from, to)
+	if err !=nil {
+		t.Errorf("Error of ListComments: %v", err)
+	}
+
+	for i, ele := range res {
+		fmt.Printf("comment: %d, %v \n", i, ele)
+	}
 }

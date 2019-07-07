@@ -141,7 +141,7 @@ func AddNewComments(vid string, aid int, content string) error {
 	}
 
 	stmtIns, err := dbConn.Prepare(
-		"insert into comments (id, video_id, arthor_id, content) values (?, ?, ?, ?)")
+		"insert into comments (id, video_id, author_id, content) values (?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}

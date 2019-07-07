@@ -18,3 +18,8 @@ type Content struct {
 	Author string
 	Content string
 }
+
+type SimpleSession struct {
+	Username string //login name
+	TTL int64 //用来检查用户是否过期
+}
