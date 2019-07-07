@@ -88,5 +88,21 @@ func RetrieveAllSession() (*sync.Map, error) {
 		}
 	}
 
-	return m, nil 
+	return m, nil
+}
+
+func DeleteSession(sid string) error {
+	stmtOut, err := dbConn.Prepare("delete from sessions where session_id = ?")
+	if err != nil {
+		log.Printf("%s", err)
+		return err
+	}
+
+	defer stmtOut.Close()
+
+	if _, err = stmtOut.Exec(sid); err != nil {
+		return err
+	}
+
+	return nil
 }
