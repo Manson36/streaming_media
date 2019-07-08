@@ -41,7 +41,7 @@ type VideosInfo struct {
 }
 
 type Comments struct {
-	Comments []*comment `json:"comments"`
+	Comments []*Comment `json:"comments"`
 }
 
 //Data model
@@ -51,7 +51,7 @@ type User struct {
 	Pwd string
 }
 
-type comment struct {
+type Comment struct {
 	Id string `json:"id"`
 	VideoId string `json:"video_id"`
 	Author string `json:"author"`

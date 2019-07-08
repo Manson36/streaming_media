@@ -88,5 +88,17 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 
 	uname := p.ByName("username")
-	u, err := dbops.G
+	u, err := dbops.GetUser(uname)
+	if err != nil {
+		log.Printf("Error in GetUserInfo: %s", err)
+		sendErrorResponse(w, defs.ErrorDBError)
+		return
+	}
+
+	ui := &defs.UserInfo{Id: u.Id}
+	if resp, err := json.Marshal(ui); err != nil {
+		sendErrorResponse(w, defs.ErrorInternalFaults)
+	} else {
+		sendNormalResponse(w, string(resp), 200)
+	}
 }

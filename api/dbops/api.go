@@ -84,7 +84,7 @@ func GetUser(loginName string) (*defs.User, error) {
 
 	res := &defs.User{Id: id, LoginName: loginName, Pwd: pwd}
 
-	return res, nil 
+	return res, nil
 }
 
 //Video 的实现
@@ -144,6 +144,43 @@ func GetVideoInfo(vid string) (*defs.VideoInfo, error) {
 	return res, nil
 }
 
+func ListVideoInfo(uname string, from, to int) ([]*defs.VideoInfo, error) {
+	stmtOut, err := dbConn.Prepare(`SELECT video_info.id, video_info.author_id, 
+		video_info.name, video_info.display_ctime FROM video_info 
+		INNER JOIN users ON video_info.author_id = users.id
+		WHERE users.login_name = ? AND video_info.create_time > FROM_UNIXTIME(?) 
+		AND video_info.create_time <= FROM_UNIXTIME(?) 
+		ORDER BY video_info.create_time DESC`)
+
+	var res []*defs.VideoInfo
+
+	if err != nil {
+		return res, err
+	}
+
+	defer stmtOut.Close()
+
+	rows, err := stmtOut.Query(uname, from, to)
+	if err != nil {
+		log.Printf("%s", rows)
+		return res, err
+	}
+
+	for rows.Next() {
+		var id, name, ctime string
+		var aid int
+
+		if err := rows.Scan(&id, &aid, &name, &ctime); err != nil {
+			return res, err
+		}
+
+		vi := &defs.VideoInfo{Id: id, AuthorId: aid, Name: name, DisplayCtime: ctime}
+		res = append(res, vi)
+	}
+
+	return res, nil
+}
+
 func DeleteVideoInfo(vid string) error {
 	stmtDel, err := dbConn.Prepare("delete from video_info where id=?")
 	if err != nil {
@@ -183,7 +220,7 @@ func AddNewComments(vid string, aid int, content string) error {
 	return nil
 }
 
-func ListComments(vid string, from, to int) ([]*defs.Content, error) {
+func ListComments(vid string, from, to int) ([]*defs.Comment, error) {
 	//将两张表合并users join comments，输入author id, video id, 得到 带有user login_name的comments
 	//将起始时间开区间，结束时间为闭区间，防止最后一个记录获取不到
 	stmtOut, err := dbConn.Prepare(`select comments.id, users.Login_name, comments.content 
@@ -193,7 +230,7 @@ func ListComments(vid string, from, to int) ([]*defs.Content, error) {
 
 	defer stmtOut.Close()
 
-	var res []*defs.Content
+	var res []*defs.Comment
 
 	rows, err := stmtOut.Query(vid, from, to)
 	if err != nil {
@@ -207,7 +244,7 @@ func ListComments(vid string, from, to int) ([]*defs.Content, error) {
 			return res, err
 		}
 
-		c := &defs.Content{Id:id, VideoId: vid, Author: name, Content:content}
+		c := &defs.Comment{Id:id, VideoId: vid, Author: name, Content:content}
 
 		res = append(res, c)
 	}
