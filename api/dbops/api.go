@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+
 //api的操作就是对数据库的增删改查
 func AddUserCredential(loginName string, pwd string) error {
 	stmtIns, err := dbConn.Prepare("insert into users (login_name, pwd) values (?, ?)")
@@ -58,6 +59,32 @@ func DeleteUser(loginName string, pwd string) error {
 	}
 
 	return nil
+}
+
+func GetUser(loginName string) (*defs.User, error) {
+	stmtOut, err := dbConn.Prepare("select id, pwd from users where login_name = ?")
+	if err != nil {
+		log.Printf("%s", err)
+		return nil, err
+	}
+
+	defer stmtOut.Close()
+
+	var id int
+	var pwd string
+
+	err = stmtOut.QueryRow(loginName).Scan(&id, &pwd)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	res := &defs.User{Id: id, LoginName: loginName, Pwd: pwd}
+
+	return res, nil 
 }
 
 //Video 的实现

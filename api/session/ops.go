@@ -17,7 +17,7 @@ import (
 var sessionMap *sync.Map
 
 func init() {
-	sessionMap := &sync.Map{} //？？？
+	sessionMap = &sync.Map{}
 }
 
 func nowInMilli() int64 {
