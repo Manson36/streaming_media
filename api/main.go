@@ -38,7 +38,7 @@ func RegisterHandlers() *httprouter.Router {
 
 	router.POST("/video/:video-id/comments", PostComment)
 
-	router.GET("/video/:vid-id/comments", Showcomments)
+	router.GET("/video/:vid-id/comments", ShowComments)
 
 	return router
 }
