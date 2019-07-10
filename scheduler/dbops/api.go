@@ -19,5 +19,5 @@ func AddVideoDeletionRecord(vid string) error {
 		return err
 	}
 
-	return nil 
+	return nil
 }
