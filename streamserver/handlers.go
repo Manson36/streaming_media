@@ -49,7 +49,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 		return
 	}
 
-	file, _, err := r.FormFile("")//在form这个tag中有一个叫做name=“”, 在这里我们设成file
+	file, _, err := r.FormFile("file")//在form这个tag中有一个叫做name=“”, 在这里我们设成file
 	if err != nil {
 		sendErrorResponse(w, http.StatusInternalServerError, "internal error")
 		return
