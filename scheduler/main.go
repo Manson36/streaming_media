@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/streaming_media/scheduler/taskrunner"
-	"math"
 	"net/http"
 )
 

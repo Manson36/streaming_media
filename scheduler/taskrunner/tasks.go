@@ -38,7 +38,7 @@ func VideoClearExecutor(dc dataChan) error {
 				go func(id interface{}) { //会出现没有完成删除操作，内容又被读取问题，这里没有影响
 				//为什么不直接将调用vid，而是作为参数传进来：在闭包中调用goroutine，实际上会拿到环境参数瞬时的状态
 				//而不会将它的状态保存；只有在将参数传入，才会完整的遍历。
-					if err :=  deleteVideo(id.(string)); err != nil {//删除文件
+					if err := deleteVideo(id.(string)); err != nil {//删除文件
 						errMap.Store(id, err)
 						return
 					}
