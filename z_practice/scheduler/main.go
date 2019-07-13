@@ -172,7 +172,7 @@ type Runner struct {
 	Error controlChan
 	Data dataChan
 	dataSize  int
-	longLived bool 
+	longLived bool
 	Dispatcher fn
 	Executor fn
 }
