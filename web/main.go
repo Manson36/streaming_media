@@ -8,7 +8,7 @@ import (
 func RegisterHandler() *httprouter.Router {
 	router := httprouter.New()
 
-	router.GET("/", homeHandler)
+	router.GET("/", homeHandler)//登陆主界面
 
 	router.POST("/", homeHandler)
 
