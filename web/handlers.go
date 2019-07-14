@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
+	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -66,6 +69,27 @@ func userHomeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 		return
 	}
 
-	t.Execute(w, t)
+	t.Execute(w, p)
 }
 
+//api透传
+func apiHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	//我们使用是api method只有post
+	if r.Method != http.MethodPost {
+		re, _ := json.Marshal(ErrorRequestNotRecognized)
+		io.WriteString(w, string(re))
+		return
+	}
+
+	res, _ := ioutil.ReadAll(r.Body)
+	apiBody := &ApiBody{}
+	if err := json.Unmarshal(res, apiBody); err != nil {
+		re, _ := json.Marshal(ErrorRequestBodyParseFailed)
+		io.WriteString(w, string(re))
+		return
+	}
+
+	//前面是request的预处理，下面是真正的处理
+	request(apiBody, w, r)
+	defer r.Body.Close()
+}
