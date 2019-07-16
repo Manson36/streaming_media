@@ -16,7 +16,9 @@ func RegisterHandler() *httprouter.Router {
 
 	router.POST("/userhome", userHomeHandler)
 
-	router.POST("api", apiHandler)
+	router.POST("/api", apiHandler) //api透传
+
+	router.POST("/upload/:vid-id", proxyHandler)//proxy透传
 
 	router.ServeFiles("/statics/*filepath", http.Dir("./templates"))
 

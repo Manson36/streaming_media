@@ -22,7 +22,7 @@ func request(b *ApiBody, w http.ResponseWriter, r *http.Request) {
 	switch b.Method {
 	case http.MethodGet:
 		req, _ := http.NewRequest("Get", b.Url, nil)
-		req.Header = r.Header
+		req.Header = r.Header//???目的是啥？
 		resp, err = httpClient.Do(req)//这么做的好处是：前台(java script)处理到的response会和我们api service完全保持一致
 		if err != nil {
 			log.Printf("%s",err)

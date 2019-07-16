@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/julienschmidt/httprouter"
+	"github.com/streaming_media/api/session"
 	"net/http"
 )
 
@@ -43,6 +44,9 @@ func RegisterHandlers() *httprouter.Router {
 	return router
 }
 
+func Prepare() {
+	session.LoadSessionFromDB()
+}
 
 func main() {
 	r := RegisterHandlers()
