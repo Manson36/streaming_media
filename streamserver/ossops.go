@@ -1,13 +1,16 @@
 package main
 
-import "log"
+import (
+	"github.com/streaming_media/streamserver/config"
+	"log"
+)
 
 var EP string
 var AK string  //access key 在阿里云个人信息可以查看
 var SK string  //同AK
 
 func init() {
-	EP = ""
+	EP = config.GetOssAddr()
 	AK = ""
 	SK = ""
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"github.com/julienschmidt/httprouter"
+	"github.com/streaming_media/web/config"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -96,7 +97,13 @@ func apiHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	defer r.Body.Close()
 }
 
-func proxyHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func proxyVideoHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	u, _ := url.Parse("http://"+ config.GetLBAddr() + ":9000/")
+	proxy := httputil.NewSingleHostReverseProxy(u)
+	proxy.ServeHTTP(w, r)
+}
+
+func proxyUploadHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	u, _ := url.Parse("http://127.0.0.1:9000")//这里我们直接写入url，是为了直观，最好配置一下
 	proxy := httputil.NewSingleHostReverseProxy(u)//这里我们传u而不直接使用url是因为这里的参数是*Url而不是string
 	//上面的这个函数非常直接的将原来的：8080端口替换成9000端口，后面的directory是不会改变的；而且header中的内容也没有变
