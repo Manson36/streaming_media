@@ -70,7 +70,7 @@ func IsSessionExpired(sid string) (string, bool) {
 		}
 
 		return ss.(defs.SimpleSession).Username, false
-	} else {
+	} else { //SLB操作：如果没有，我们从DB中拿
 		ss, err := dbops.RetrieveSession(sid)
 
 		if err != nil || ss == nil {
