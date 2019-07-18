@@ -3,8 +3,8 @@ package taskrunner
 import (
 	"errors"
 	"github.com/streaming_media/scheduler/dbops"
+	"github.com/streaming_media/scheduler/ossops"
 	"log"
-	"os"
 	"sync"
 )
 
@@ -66,11 +66,21 @@ func VideoClearExecutor(dc dataChan) error {
 
 //在这里补一下删文件操作
 func deleteVideo(vid string) error {
-	err := os.Remove(VIDEO_PATH + vid)
+	//err := os.Remove(VIDEO_PATH + vid)
+	//
+	//if err != nil && !os.IsNotExist(err) {
+	//	log.Printf("Deleting video error: %v", err)
+	//	return err
+	//}
 
-	if err != nil && !os.IsNotExist(err) {
-		log.Printf("Deleting video error: %v", err)
-		return err
+	//后来的oss操作：
+	ossfn:= "videos/" + vid
+	bn := "avenssi-videos2"
+	ok := ossops.DeleteObject(ossfn, bn)
+
+	if !ok {
+		log.Printf("Deleting video error, oss operation failed")
+		return errors.New("deleting video error")
 	}
 
 	return nil

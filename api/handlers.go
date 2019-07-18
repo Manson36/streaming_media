@@ -169,7 +169,9 @@ func DeleteVideo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		return
 	}
 
+	//oss操作加入内容：为什么goroutine？是有下面的任务是异步任务，不要让它阻塞主流程
 	go utils.SendDeleteVideoRequest(vid)
+
 	sendNormalResponse(w, "", 204)
 }
 

@@ -3,12 +3,15 @@ package utils
 import (
 	"crypto/rand"
 	"fmt"
+	"github.com/streaming_media/web/config"
 	"io"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
 )
+
+//在这里我们会放一些非主流程的代码
 
 func NewUUID() (string, error) {
 	uuid := make([]byte, 16)
@@ -28,8 +31,9 @@ func GetCurrentTimestampSec() int {
 	return ts
 }
 
+//这是一个异步任务，有返回值前面也捕捉不到，我们不用给它返回值
 func SendDeleteVideoRequest(id string) {
-	addr := config.GetLbAddr() + ":9001"
+	addr := config.GetLBAddr() + ":9001"
 	url := "http://" + addr + "/video-delete-record/" + id
 	_, err := http.Get(url)
 	if err != nil {
