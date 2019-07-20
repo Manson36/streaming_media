@@ -13,6 +13,11 @@ type User struct {
 	Pwd string
 }
 
+type SimpleSession struct {
+	UserName string
+	TTL int64
+}
+
 //error
 type Err struct {
 	Error string `json:"error"`

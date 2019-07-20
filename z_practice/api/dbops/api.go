@@ -76,5 +76,5 @@ func GetUser(loginName string) (*api.User, error) {
 
 	res := &api.User{Id: id, LoginName:loginName, Pwd: pwd}
 
-	return res, nil 
+	return res, nil
 }
