@@ -1,11 +1,24 @@
 package api
 
 import (
-	"encoding/json"
 	"github.com/julienschmidt/httprouter"
-	"io/ioutil"
 	"net/http"
 )
+
+type middleWareHandler struct {
+	r *httprouter.Router
+}
+
+func (m middleWareHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	validateUserSession(r)
+	m.r.ServeHTTP(w, r)
+}
+
+func newMiddleWareHandler(r *httprouter.Router) http.Handler {
+	m := middleWareHandler{}
+	m.r = r
+	return m
+}
 
 func RegisterHandlers() *httprouter.Router {
 	router := httprouter.New()

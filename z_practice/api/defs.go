@@ -6,7 +6,12 @@ type UserCredential struct {
 	UserPwd string `json:"user_pwd"`
 }
 
-
+//Data model
+type User struct {
+	Id int
+	LoginName string
+	Pwd string
+}
 
 //error
 type Err struct {
