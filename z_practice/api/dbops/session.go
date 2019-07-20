@@ -109,5 +109,5 @@ func DeleteSession(sid string) error {
 		return err
 	}
 
-	return nil 
+	return nil
 }
