@@ -10,7 +10,7 @@ type MiddleWareHandler struct {
 	l *ConnLimiter
 }
 
-func NewMiddleWareHandler(r *httprouter.Router, cc int) http.Headler {
+func NewMiddleWareHandler(r *httprouter.Router, cc int) http.Handler {
 	//m := MiddleWareHandler{
 	//	r: r,
 	//	l: NewConnLimiter(cc),
