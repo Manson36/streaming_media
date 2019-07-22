@@ -32,3 +32,31 @@ func addVideoDeletionRecord(vid string) error {
 	}
 	return nil
 }
+
+func ReadVideoDeletionRecord(count int) ([]string, error) {
+	stmtOut, err := dbConn.Prepare("select video_id from video_del_rec limit ?")
+
+	var ids []string
+	if err != nil {
+		return ids, err
+	}
+
+	defer stmtOut.Close()
+
+	rows, err := stmtOut.Query(count)
+	if err != nil {
+		log.Printf("Query videodeletionrecord error: %s", err)
+		return ids, err
+	}
+
+	for rows.Next() {
+		var id string
+		if err := rows.Scan(id); err != nil {
+			return ids, err
+		}
+
+		ids = append(ids, id)
+	}
+
+	return ids, nil
+}
