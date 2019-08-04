@@ -44,11 +44,47 @@ func QuickSort(values []int) {
 }
 
 func QuickSort2(values []int) {
-	
+	if len(values) <= 1 {
+		return
+	}
+
+	mid, i := values[0], 1
+	head, tail := 0, len(values) - 1
+
+	for head < tail {
+		if values[i] > mid {
+			values[i], values[tail] = values[tail], values[i]
+			tail--
+		} else {
+				values[i], values[head] = values[head], values[i]
+				head++
+				i++
+		}
+	}
+
+	QuickSort2(values[: head])
+	QuickSort2(values[head+1:])
+
+}
+
+func BubbleSort(arr [5]int) {
+	for i := 0; i < len(arr)-1; i++ {
+		for j := 0; j < len(arr) -1 -i; j++ {
+			if arr[j] > arr[j + 1] {
+				(arr)[j], (arr)[j +1] = (arr)[j + 1], (arr)[j]
+			}
+		}
+	}
+
+	fmt.Println(arr)
 }
 
 func main() {
 	var values = []int{22,3,4,55,6,24,11}
-	QuickSort(values)
+	arr := [5]int{44,2,56,7,12}
+	//QuickSort(values)
+	QuickSort2(values)
+	BubbleSort(arr)
+	fmt.Println(arr)
 	fmt.Println(values)
 }
